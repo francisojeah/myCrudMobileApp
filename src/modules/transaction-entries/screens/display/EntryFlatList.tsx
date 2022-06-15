@@ -21,15 +21,9 @@ const EntryFlatList: React.FC<Props> = ({ entries }) => {
             ListHeaderComponent={
                 () => (
                     <View>
-                        <Text h3 style={[styles.inputContainerStyle, { backgroundColor: "lightblue" }]}>Entries so far... <Badge status="primary" value={entries.length} /></Text>
+                        <Text h4 style={[styles.inputContainerStyle, { backgroundColor: "lightblue" }]}>Entries found... <Badge status="primary" value={entries.length} /></Text>
                     </View>
                 )}
-
-            /*
-            ListFooterComponent = {
-                ()=> (<View style={{backgroundColor:'#ccc', paddingBottom: 30, paddingTop: 3,alignContent:"flex-start"}}><Text style={{fontSize: 15, fontStyle: "italic"}}>Copyright: Pius Onobhayedo</Text></View>)
-            }
-            */
 
             keyExtractor={(item, index) => index.toString()}
             ItemSeparatorComponent={
@@ -58,6 +52,6 @@ const styles = StyleSheet.create({
     title: { fontSize: 16, color: 'black' },
     inputContainerStyle: {
         width: '100%',
-        padding: 3
+        padding: 6
     }
 });

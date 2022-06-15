@@ -4,6 +4,7 @@ import { Button, Input, Text, CheckBox } from '@rneui/base';
 import DateTimePicker from '@react-native-community/datetimepicker'; //installation required
 import { TransactionEntryContext } from '../../contexts/Contexts';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 
 /**
  * Type for state variable for the form
@@ -20,10 +21,10 @@ type IState = {
 
 const AddEntry: React.FC = () => {
 
-    const {createEntry} = useContext(TransactionEntryContext)!;
+    const { createEntry } = useContext(TransactionEntryContext)!;
 
     const navigation = useNavigation();
-    
+
     const date = new Date(); // for initializing all the dates.
     const [state, setState] = useState<IState>({
         txnDay: date.getDate(),
@@ -41,35 +42,39 @@ const AddEntry: React.FC = () => {
         <View style={styles.container}>
             <Text h3 style={styles.inputContainerStyle}>Make new entry</Text>
             {/* Only show button below if the OS is not ios. IOS DateTimePicker is visible by default */}
-            {Platform.OS !== "ios" && <Button style={styles.inputContainerStyle}
-                title="Select Date"
-                onPress={() => {
-                    setShowDatePicker(true);
-                }}
-            />}
-            {showDatePicker && <DateTimePicker
-                style={styles.inputContainerStyle}
-                value={state.date}
-                mode={'date'}
-                //is24Hour={true}
-                display="default"
-                onChange={(_event: any, selectedDate: any) => {
-                    const date: Date = selectedDate as Date;
-                    setState({
-                        ...state,
-                        date: selectedDate,
-                        txnDay: date.getDate(),
-                        txnMonth: date.getMonth(),
-                        txnYear: date.getFullYear()
-                    })
-                    setShowDatePicker(Platform.OS === "ios" ? true : false);
-                }}
-            />}
+            <View style={[styles.inputContainerStyle, { flexDirection: 'row', alignSelf: 'flex-start' }]}>
+                {Platform.OS !== "ios" &&  <Button
+                    radius={6}
+                    title={moment(state.date).format("LL")}
+                    onPress={() => {
+                        setShowDatePicker(true);
+                    }}
+                />}
+                {showDatePicker && <DateTimePicker
+                    style={styles.inputContainerStyle}
+                    value={state.date}
+                    mode={'date'}
+                    //is24Hour={true}
+                    display="default"
+                    onChange={(_event: any, selectedDate: any) => {
+                        const date: Date = selectedDate as Date;
+                        setState({
+                            ...state,
+                            date: selectedDate,
+                            txnDay: date.getDate(),
+                            txnMonth: date.getMonth(),
+                            txnYear: date.getFullYear()
+                        })
+                        setShowDatePicker(Platform.OS === "ios" ? true : false);
+                    }}
+                />}
+            </View>
             <CheckBox
                 title='Income?'
-                containerStyle={[styles.inputContainerStyle, { marginTop: 10, borderColor: '#fffff2' }]}
+                containerStyle={[styles.inputContainerStyle, { marginTop: 10 }]}
                 checked={!state.expense}
                 onPress={() => { setState({ ...state, expense: !state.expense }) }}
+                style={styles.inputStyle}
             />
             <Input
                 label="Description"
@@ -78,6 +83,7 @@ const AddEntry: React.FC = () => {
                 inputContainerStyle={styles.inputContainerStyle}
                 leftIcon={{ type: 'font-awesome', name: 'comment' }}
                 onChangeText={description => setState({ ...state, description })}
+                style={styles.inputStyle}
             />
             <Input
                 label="Amount"
@@ -86,6 +92,7 @@ const AddEntry: React.FC = () => {
                 inputContainerStyle={styles.inputContainerStyle}
                 leftIcon={{ type: 'font-awesome', name: 'money' }}
                 onChangeText={amount => setState({ ...state, amount: +amount })}
+                style={styles.inputStyle}
             />
 
             <View style={{ flexDirection: 'row' }}>
@@ -113,12 +120,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        marginTop: 30
+        padding: 18
     },
     inputContainerStyle: {
         width: '100%',
         padding: 10,
         backgroundColor: '#fffff2'
+    },
+    inputStyle: {
+        backgroundColor: '#F2F3F5',
+        borderRadius: 6,
+        height: '100%',
+        padding: 6
     }
 });
 

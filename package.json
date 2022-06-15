@@ -8,7 +8,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "migration:create": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:create",
+    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d src/global/datasources/data-source.ts",
+    "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d src/global/datasources/data-source.ts",
+    "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d src/global/datasources/data-source.ts"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",
@@ -24,7 +28,9 @@
     "expo-splash-screen": "~0.15.1",
     "expo-sqlite": "~10.2.0",
     "expo-status-bar": "~1.3.0",
+    "moment": "^2.29.3",
     "patch-package": "^6.4.7",
+    "pg": "^8.7.3",
     "postinstall-postinstall": "^2.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -44,6 +50,7 @@
     "@types/react": "~17.0.45",
     "@types/react-native": "~0.66.13",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
+    "ts-node": "^10.8.1",
     "typescript": "~4.3.5"
   },
   "private": true

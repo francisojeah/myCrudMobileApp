@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DataSource } from 'typeorm';
 import { TransactionEntry } from './entities/transaction-entry.entity';
 import { createTransactionEntry, deleteTransactionEntry, getTransactionEntries, updateTransactionEntry } from './services/transaction-entry.service';
@@ -20,7 +20,6 @@ See in App component below how it is used
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import TransactionEntryHomeScreen from './screens/display/TransactionEntryHomeScreen';
 import { TransactionEntryContext } from './contexts/Contexts';
-import { View } from 'react-native';
 import { Button, Icon } from '@rneui/base';
 import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu';
 import EditEntry from './screens/edit/EditEntry';
@@ -113,7 +112,6 @@ const AppStack = () => {
             initialRouteName='TransactionEntryHomeScreen'
 
             screenOptions={{
-                headerBackTitleVisible: true,
                 headerMode: 'screen',
                 presentation: 'card',
                 keyboardHandlingEnabled: true,
@@ -123,23 +121,33 @@ const AppStack = () => {
                 },
                 headerTitleStyle: {
                     fontWeight: 'bold',
+                    fontSize: 18,
+                    //fontFamily: 'space-mono'
                 },
                 title: "Personal Transactions",
                 //Below can be overriden at the level of stack.screen
-                headerLeft: () => (
-                    <Image style={styles.logo}
-                        source={require('../../../assets/pau-logo-blue-transparent-background.png')}
-                    />
-                ),
-                //Below can be overriden at the level of stack.screen
                 headerRight: () => (
-                    toggleMenu()
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity
+                            style={styles.logo}
+                            onPress={() => navigation.navigate('TransactionEntryHomeScreen' as never)}>
+                            <Image style={styles.logo}
+                                source={require('../../../assets/pau-logo-blue-transparent-background.png')}
+                            />
+                        </TouchableOpacity>
+                        {toggleMenu()}
+                    </View>
                 ),
-                headerTitleAlign: 'left'
+                headerTitleAlign: 'center'
                 //There are other possibilities. See https://reactnavigation.org/docs/stack-navigator
             }} >
             <Stack.Screen name="TransactionEntryHomeScreen" component={TransactionEntryHomeScreen}
-
+                options={{ //override here, the general value in screenOptions above.
+                    headerTitleAlign: 'left', 
+                    headerTitleStyle: {
+                        fontSize: 21,
+                    }
+                }}
             //there are other possibilities, see https://reactnavigation.org/docs/screen
             />
             <Stack.Screen name="AddEntryScreen" component={AddEntry}
@@ -264,7 +272,8 @@ const styles = StyleSheet.create({
     logo: {
         width: 30,
         height: 30,
-        marginLeft: 6
+        //marginLeft: 6
+        alignSelf: 'center' //aligned in column direction as the wrapper is row direction
     }
 });
 

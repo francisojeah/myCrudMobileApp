@@ -9,14 +9,20 @@ const dataSource = new DataSource({
     database: "personal_transaction_manager.db",
     driver: require('expo-sqlite'),
     entities: [
-        //"src/**/*.entity{.ts,.js}" //Not working. I need to investigate this further.
+        //"src/**/*.entity{.ts,.js}", //Not working. I need to investigate this further.
         Post,
         Category,
         Author,
         TransactionEntry
     ],
-    synchronize: true,
+    synchronize: true, //set to false in production and migrationRun to true
     type: "expo",
+    /*migrations: [
+        //'src/global/migrations/*.ts'
+        //or specify the module as in entities above
+        name1655204334428
+    ],
+    migrationsRun: true*/
 
 });
 

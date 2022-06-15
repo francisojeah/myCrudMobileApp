@@ -5,6 +5,7 @@ import { ITransactionEntry } from '../../types/definitions';
 import { showDeleteConfirmation } from '../../../../global/tools/show-alert';
 import { useNavigation } from '@react-navigation/native';
 import { TransactionEntryContext } from '../../contexts/Contexts';
+import moment from 'moment';
 
 type Props = {
     item: ITransactionEntry;
@@ -20,7 +21,7 @@ const EntryFlatListItem: React.FC<Props> = ({ item }) => {
     
     return (
         <View style={styles.inputContainerStyle}>
-            <Text style={{ fontSize: 18 }}>Date: {new Date(item.txnYear!, item.txnMonth!, item.txnDay!).toLocaleDateString('en-GB')}</Text>
+            <Text style={{ fontSize: 18 }}>Date: {moment([item.txnYear!, item.txnMonth!, item.txnDay!]).format('LL')}</Text>
             <Text style={{ fontSize: 18 }}>Income?: {item.expense ? "No" : "Yes"}</Text>
             <Text style={{ fontSize: 18 }}>Description: {item.description}</Text>
             <Text style={{ fontSize: 18 }}>Amount: {item.amount}</Text>

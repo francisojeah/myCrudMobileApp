@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import { DataSource, Repository } from "typeorm";
 import { TransactionEntry } from "../entities/transaction-entry.entity";
@@ -79,7 +80,7 @@ export const deleteTransactionEntry = async (dataSource: DataSource, id: number,
  export const transformEntriesToDateSections = (entries: ITransactionEntry[]): EntriesInDateSections[] => {
     //first get distinct txnDates in entry. See https://codeburst.io/javascript-array-distinct-5edc93501dc4 for ideas on how to use ...new Set
     const distinctTxnDates = [...new Set(entries.map(entry => {
-      const txnDate = new Date(entry.txnYear!, entry.txnMonth!, entry.txnDay!).toLocaleDateString('en-GB');
+      const txnDate = moment([entry.txnYear!, entry.txnMonth!, entry.txnDay!]).format('LL');
       return txnDate;
     }))];
 
@@ -88,7 +89,7 @@ export const deleteTransactionEntry = async (dataSource: DataSource, id: number,
 
       let dataOnTxnDate: ITransactionEntry[] = [];
       entries.map((entry) => {
-        const txnDate = new Date(entry.txnYear!, entry.txnMonth!, entry.txnDay!).toLocaleDateString('en-GB');
+        const txnDate = moment([entry.txnYear!, entry.txnMonth!, entry.txnDay!]).format('LL');
         if (txnDate == distinctTxnDate) {
           dataOnTxnDate.push(entry)
         }

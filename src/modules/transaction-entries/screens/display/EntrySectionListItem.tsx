@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ButtonGroup, Text, Button, Icon } from '@rneui/base';
-import { showAlert, showDeleteConfirmation } from '../../../../global/tools/show-alert';
+import { showDeleteConfirmation } from '../../../../global/tools/show-alert';
 import { ITransactionEntry } from '../../types/definitions';
 import { TransactionEntryContext } from '../../contexts/Contexts';
 import { useNavigation } from '@react-navigation/native';

@@ -27,15 +27,9 @@ const EntrySectionList: React.FC<Props> = ({ entriesInDateSections }) => {
             ListHeaderComponent={
                 () => (
                     <View>
-                        <Text h3 style={[styles.inputContainerStyle, { backgroundColor: "lightblue" }]}>Entries so far by date...</Text>
+                        <Text h4 style={[styles.inputContainerStyle, { backgroundColor: "lightblue" }]}>Entries found by date...</Text>
                     </View>
                 )}
-
-            /*
-            ListFooterComponent = {
-                ()=> (<View style={{backgroundColor:'#ccc', paddingBottom: 30, paddingTop: 3,alignContent:"flex-start"}}><Text style={{fontSize: 15, fontStyle: "italic"}}>Copyright: Pius Onobhayedo</Text></View>)
-            }
-            */
 
             ItemSeparatorComponent={
                 //this component will be rendered in between items
@@ -65,7 +59,7 @@ const styles = StyleSheet.create({
     title: { fontSize: 16, color: 'black' },
     inputContainerStyle: {
         width: '100%',
-        padding: 3
+        padding: 6
     },
     header: {
         fontSize: 16,
