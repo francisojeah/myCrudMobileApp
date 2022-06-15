@@ -12,6 +12,7 @@ import { TransactionEntry } from '../../entities/transaction-entry.entity';
 import { Icon, SearchBar } from "@rneui/themed";
 import { Text } from '@rneui/base';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 
 const TransactionEntryHomeScreen: React.FC = () => {
 
@@ -41,7 +42,7 @@ const TransactionEntryHomeScreen: React.FC = () => {
             const newData = transactionEntries.filter((item) => {
                 //Check fields for occurrence
                 //I am using formatted Date in combined fields below so as to allow for search of month in word
-                const combinedFields = `${item.description} ${item.amount} ${item.txnMonth + 1} ${new Date(item.txnYear, item.txnMonth, item.txnDay).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                const combinedFields = `${item.description} ${item.amount} ${item.txnMonth + 1} ${moment([item.txnYear, item.txnMonth, item.txnDay]).format("LL")}`;
                 const itemData = combinedFields
                     ? combinedFields.toUpperCase()
                     : ''.toUpperCase();
