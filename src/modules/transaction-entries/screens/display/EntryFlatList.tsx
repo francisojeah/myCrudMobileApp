@@ -7,27 +7,32 @@ import { ITransactionEntry } from '../../types/definitions';
 
 import { parse } from 'json2csv';
 
+
+
 type Props = {
     entries: ITransactionEntry[] | [] //array of entries
 }
 
 const EntryFlatList: React.FC<Props> = ({ entries }) => {
 
+
     const onShare = async () => {
         try {
+            
             //share as csv
             //strip off id before sharing
             const entriesToShare = entries.map((entry, key) => {
-                const {id, ...restOfEntry} = entry;
+                const { id, ...restOfEntry } = entry;
                 //putting serial number first
-                const entryWithSerialNumber = {SN: key + 1}
-                Object.assign(entryWithSerialNumber, restOfEntry) 
-                return entryWithSerialNumber;            
+                const entryWithSerialNumber = { SN: key + 1 }
+                Object.assign(entryWithSerialNumber, restOfEntry)
+                return entryWithSerialNumber;
             })
 
             const result = await Share.share({
-                message: parse(entriesToShare)
-            });
+                message: parse(entriesToShare),
+                title: 'Entries in CSV format',
+            }, { dialogTitle: 'Entries in CSV format' });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
                     // shared with activity type of result.activityType
