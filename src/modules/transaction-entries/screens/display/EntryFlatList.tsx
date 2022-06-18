@@ -24,7 +24,7 @@ const EntryFlatList: React.FC<Props> = ({ entries }) => {
             const entriesToShare = entries.map((entry, key) => {
                 const { id, ...restOfEntry } = entry;
                 //putting serial number first
-                const entryWithSerialNumber = { SN: key + 1 }
+                const entryWithSerialNumber: ITransactionEntry = { SN: key + 1 } as never
                 Object.assign(entryWithSerialNumber, restOfEntry)
                 return entryWithSerialNumber;
             })

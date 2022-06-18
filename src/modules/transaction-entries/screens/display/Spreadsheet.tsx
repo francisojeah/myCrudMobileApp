@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Badge, Icon, Text } from '@rneui/base';
+import { Badge, Button, Icon, Text } from '@rneui/base';
 import { ITransactionEntry } from '../../types/definitions';
 import { Table, Row, Rows, TableWrapper, Cell } from 'react-native-table-component';
 import * as Print from 'expo-print';
@@ -8,6 +8,8 @@ import { shareAsync } from 'expo-sharing';
 import { deleteAsync } from 'expo-file-system';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
+import { showDeleteConfirmation } from '../../../../global/tools/show-alert';
+import { TransactionEntryContext } from '../../contexts/Contexts';
 
 type Props = {
     entries: ITransactionEntry[] //array of entries
@@ -18,6 +20,10 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
     const navigation = useNavigation();
 
     const [table, setTable] = useState<{ headers: string[], rows: any[], widthArr: number[] } | null>(null);
+
+    const transactionEntryContext = useContext(TransactionEntryContext);
+
+    const { deleteEntry } = transactionEntryContext!
 
     const makeTable = () => {
 
@@ -64,16 +70,33 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
                             {
                                 table.rows.map((rowData, index) => {
                                     return (
-                                        <TableWrapper key={index} style={styles.row} >
-                                            {
-                                                rowData.map((cellData: string, cellIndex: number) =>
-                                                (
-                                                    <TouchableOpacity key={cellIndex} onPress={() => navigation.navigate("EditEntryScreen" as never, { transactionEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
-                                                        <Cell key={cellIndex} data={cellData} textStyle={styles.text} width={table.widthArr[cellIndex]} borderStyle={styles.cellBorders}/>
-                                                    </TouchableOpacity>
-                                                )
-                                            )}
-                                        </TableWrapper>
+                                        
+
+                                            <TableWrapper key={index} style={styles.row} >
+                                                <TouchableOpacity onPress={
+                                                    () => {
+                                                        //deleteEntry(item.id!)
+                                                        showDeleteConfirmation(
+                                                            "About to Delete",
+                                                            "Are you sure that you want to delete this entry?",
+                                                            rowData[0],
+                                                            deleteEntry
+                                                        )
+                                                }}>
+                                                    <Cell data='❌' textStyle={[styles.text, {color: 'red', paddingLeft: 9, paddingTop: 3, fontSize: 10}]} width={33} borderStyle={styles.cellBorders} />
+                                                </TouchableOpacity>
+                                                {
+
+                                                    rowData.map((cellData: string, cellIndex: number) =>
+                                                    (
+                                                        <TouchableOpacity key={cellIndex} onPress={() => navigation.navigate("EditEntryScreen" as never, { transactionEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
+                                                            <Cell key={cellIndex} data={cellData} textStyle={styles.text} width={table.widthArr[cellIndex]} borderStyle={styles.cellBorders} />
+                                                        </TouchableOpacity>
+                                                    ))
+
+                                                }
+                                            </TableWrapper>
+                                        
                                     )
                                 })
                             }
@@ -86,8 +109,8 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
     )
 
     const pdfShare = async () => {
-        const html = 
-        `<html>
+        const html =
+            `<html>
             <body>
                 <table>
                     <caption>Personal Transactions</caption>
@@ -98,15 +121,15 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
                     </thead>
                     <tbody>
                         ${table!.rows.map((row) => {
-                            return `<tr>
-                                ${row.map((cell:string) => `<td>${cell}</td>`)}
+                return `<tr>
+                                ${row.map((cell: string) => `<td>${cell}</td>`)}
                             </tr>`
-                        })}
+            })}
                     </tbody>
                 </table>
             </body>
     </html>`
-    //console.log(html);
+        //console.log(html);
         // On iOS/android prints the given html. On web prints the HTML from the current page.
         const { uri } = await Print.printToFileAsync({
             html,
@@ -148,24 +171,17 @@ Spreadsheet.defaultProps = {
 export default Spreadsheet;
 
 const styles = StyleSheet.create({
-    /*
-    container: {
-        flex: 1,
-        backgroundColor: 'lightblue',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },*/
     title: { fontSize: 16, color: 'black' },
-    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-    head: { height: 40, backgroundColor: '#f1f8ff' },
-    row: { flexDirection: 'row', backgroundColor: 'lightblue' },
+    container: { flex: 1, paddingTop: 1 },
+    head: { height: 40, backgroundColor: '#f1f8ff', paddingLeft: 33, width: '100%' },
+    row: { flexDirection: 'row', backgroundColor: 'skyblue', borderWidth: 1, borderColor: 'lightblue' },
     text: { margin: 3 },
     wrapper: { flexDirection: 'row' },
     inputContainerStyle: {
         width: '100%',
         padding: 6
     },
-    cellBorders: { 
-        borderWidth: 2, borderColor: '#c8e1ff' 
+    cellBorders: {
+        //borderWidth: 1, borderColor: 'lightblue', height: '100%'
     }
 });

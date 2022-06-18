@@ -57,15 +57,14 @@ const Settings: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            marginTop: 30
+            padding: 30
         }}>
             <Text h3 style={{
                 width: '100%',
-                padding: 10,
-                backgroundColor: '#fffff2'
+                padding: 10
             }}>Select display type</Text>
             <Picker
-                style={{ width: '100%' }}
+                style={{ width: '100%', backgroundColor: '#eee', borderRadius: 6 }}
                 selectedValue={state.displayOption}
                 onValueChange={(itemValue, itemIndex) => {
                     setState({ ...state, displayOption: itemValue }) //display in this component
@@ -77,15 +76,13 @@ const Settings: React.FC = () => {
                 <Picker.Item label="By Date Sections" value={DisplayOptions.SECTION_LIST_BY_DATE} />
                 <Picker.Item label="Spreadsheet" value={DisplayOptions.SPREADSHEET} />
             </Picker>
-            <Button style={{
-                width: '100%', padding: 10, backgroundColor: '#fffff2', paddingLeft: 1
-            }}
+            <Button 
                 title="Close"
                 onPress={() => {
                     //call create which will also make the form disappear
                     navigation.goBack();
                 }}
-                buttonStyle={{ backgroundColor: 'orange' }}
+                buttonStyle={{ backgroundColor: 'orange', marginTop: 9 }}
             />
         </View>
     )
