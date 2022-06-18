@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Badge, Button, Icon, Text } from '@rneui/base';
+import { Badge, Icon, Text } from '@rneui/base';
 import { ITransactionEntry } from '../../types/definitions';
-import { Table, Row, Rows, TableWrapper, Cell } from 'react-native-table-component';
-import * as Print from 'expo-print';
+import { Table, Row, Cell } from 'react-native-table-component';
+import {printToFileAsync, } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import { deleteAsync } from 'expo-file-system';
 import moment from 'moment';
@@ -43,12 +43,12 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
             rows: entriesToShare.map((entry) => {
                 return Object.values(entry)
             }),*/
-            headers: ["S/N", "Date", "Description", "Amount", "Expense?"],
+            headers: ["", "S/N", "Date", "Description", "Amount", "Expense?"],//first empty space is for id in row which is not shown but kept for reference
             rows: entriesToShare.map((entry) => {
-                return [entry.SN, moment([entry.txnYear!, entry.txnMonth!, entry.txnDay!]).format("LL"), entry.description, new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(entry.amount), entry.expense ? 'Yes' : 'No']
+                return [entry.id, entry.SN, moment([entry.txnYear!, entry.txnMonth!, entry.txnDay!]).format("LL"), entry.description, new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(entry.amount), entry.expense ? 'Yes' : 'No']
             }),
 
-            widthArr: [40, 70, 120, 100, 80]
+            widthArr: [0, 40, 70, 120, 100, 80]//first space is for the sake of id which is not shown
         };
         setTable(table);
 
@@ -71,8 +71,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
                                 table.rows.map((rowData, index) => {
                                     return (
                                         
-
-                                            <TableWrapper key={index} style={styles.row} >
+                                            <TouchableOpacity key={index} style={styles.row}  onPress={() => navigation.navigate("EditEntryScreen" as never, { transactionEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
                                                 <TouchableOpacity onPress={
                                                     () => {
                                                         //deleteEntry(item.id!)
@@ -82,21 +81,26 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
                                                             rowData[0],
                                                             deleteEntry
                                                         )
-                                                }}>
-                                                    <Cell data='❌' textStyle={[styles.text, {color: 'red', paddingLeft: 9, paddingTop: 3, fontSize: 10}]} width={33} borderStyle={styles.cellBorders} />
+                                                    }}>
+
+                                                    <Cell data='❌' textStyle={[styles.text, { textAlign: 'center', paddingTop: 9, color: 'red', fontSize: 10, opacity: .7 }]} width={33} borderStyle={styles.cellBorders} />
+
                                                 </TouchableOpacity>
                                                 {
 
                                                     rowData.map((cellData: string, cellIndex: number) =>
                                                     (
-                                                        <TouchableOpacity key={cellIndex} onPress={() => navigation.navigate("EditEntryScreen" as never, { transactionEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
-                                                            <Cell key={cellIndex} data={cellData} textStyle={styles.text} width={table.widthArr[cellIndex]} borderStyle={styles.cellBorders} />
-                                                        </TouchableOpacity>
+                                                        
+                                                            cellIndex != 0 && //only show cell is it is not id 0 which is used for id
+                                                                <Cell key={cellIndex} data={cellData} textStyle={styles.text} width={table.widthArr[cellIndex]} borderStyle={styles.cellBorders} />
+                                                            
+                                                        
                                                     ))
 
                                                 }
-                                            </TableWrapper>
-                                        
+                                            </TouchableOpacity>
+                                       
+
                                     )
                                 })
                             }
@@ -131,7 +135,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
     </html>`
         //console.log(html);
         // On iOS/android prints the given html. On web prints the HTML from the current page.
-        const { uri } = await Print.printToFileAsync({
+        const { uri } = await printToFileAsync({
             html,
             base64: false
         });
@@ -173,15 +177,15 @@ export default Spreadsheet;
 const styles = StyleSheet.create({
     title: { fontSize: 16, color: 'black' },
     container: { flex: 1, paddingTop: 1 },
-    head: { height: 40, backgroundColor: '#f1f8ff', paddingLeft: 33, width: '100%' },
+    head: { height: 40, backgroundColor: '#f1f8ff', width: '100%' },
     row: { flexDirection: 'row', backgroundColor: 'skyblue', borderWidth: 1, borderColor: 'lightblue' },
-    text: { margin: 3 },
+    text: { padding: 6 },
     wrapper: { flexDirection: 'row' },
     inputContainerStyle: {
         width: '100%',
         padding: 6
     },
     cellBorders: {
-        //borderWidth: 1, borderColor: 'lightblue', height: '100%'
+        borderWidth: 1, borderColor: 'lightblue', height: '100%'
     }
 });
