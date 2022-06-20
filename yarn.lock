@@ -6049,9 +6049,9 @@ react-native-size-matters@^0.4.0:
   resolved "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz"
   integrity sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==
 
-"react-native-table-component@https://github.com/slice312/react-native-table-component.git":
+"react-native-table-component@https://github.com/piosystems/react-native-table-component.git":
   version "1.2.1"
-  resolved "https://github.com/slice312/react-native-table-component.git#f0cbd1136021d7e7832177dd718210f119ab1dff"
+  resolved "https://github.com/piosystems/react-native-table-component.git#f0cbd1136021d7e7832177dd718210f119ab1dff"
 
 react-native-vector-icons@^9.1.0:
   version "9.1.0"

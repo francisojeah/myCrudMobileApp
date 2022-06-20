@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm/browser';
 import { TransactionEntry } from './entities/transaction-entry.entity';
 import { createTransactionEntry, deleteTransactionEntry, getTransactionEntries, updateTransactionEntry } from './services/transaction-entry.service';
 import { AppStackParamList, DisplayOptions } from './types/definitions';

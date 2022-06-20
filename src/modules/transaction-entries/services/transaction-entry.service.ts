@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm/browser";
 import { TransactionEntry } from "../entities/transaction-entry.entity";
 import { EntriesInDateSections, ITransactionEntry } from "../types/definitions";
 

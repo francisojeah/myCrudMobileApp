@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm/browser';
 import { Author } from '../../modules/examples/entities/author.entity';
 import { Category } from '../../modules/examples/entities/category.entity';
 import { Post } from '../../modules/examples/entities/post.entity';
