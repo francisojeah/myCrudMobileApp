@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { DataSource } from "typeorm";
+import { DataSource } from "typeorm/browser";
 import { TransactionEntry } from "../entities/transaction-entry.entity";
 import { DisplayOptions } from "../types/definitions";
 
