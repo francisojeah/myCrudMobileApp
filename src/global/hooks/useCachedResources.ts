@@ -2,7 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { loadAsync } from 'expo-font';
 import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm/browser';
 import useSqliteDataSource from '../datasources/useSqliteDataSource';
 
 export default function useCachedResources() {

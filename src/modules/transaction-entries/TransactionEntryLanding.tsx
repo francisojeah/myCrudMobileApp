@@ -250,7 +250,7 @@ const TransactionEntryLanding: React.FC<Props> = ({ dataSource }) => {
 
 
     return (
-        <NavigationContainer>
+        <NavigationContainer independent={true}>
             <TransactionEntryContext.Provider value={{
                 dataSource,
                 transactionEntries,

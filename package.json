@@ -56,12 +56,12 @@
     "@types/react-native": "~0.66.13",
     "@types/react-native-table-component": "^1.2.4",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
-    "ts-node": "^10.8.1",
-    "typescript": "~4.3.5",
     "expo": "~45.0.0",
-    "postinstall-postinstall": "^2.1.0",
+    "install": "^0.13.0",
     "patch-package": "^6.4.7",
-    "install": "^0.13.0"
+    "postinstall-postinstall": "^2.1.0",
+    "ts-node": "^10.8.1",
+    "typescript": "~4.3.5"
   },
   "private": true
 }
