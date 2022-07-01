@@ -27,7 +27,10 @@ const App: React.FC = () => {
       },
       backBehavior: 'history'//Behaviour when system back is touched. Options are none, initialRoute, order, history. This seems to be buggy
     },
-    lazy: true //default is true
+    screenOptions: {
+      lazy: true //default is true
+    }
+    
   }
 
   const TabNavigator = () =>
