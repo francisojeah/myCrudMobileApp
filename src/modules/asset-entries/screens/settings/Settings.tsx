@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 import { Button, Text } from '@rneui/base'
 import { DisplayOptions } from "../../types/definitions"
-import { TransactionEntryContext } from "../../contexts/Contexts"
+import { AssetEntryContext } from "../../contexts/Contexts"
 import { useNavigation } from "@react-navigation/native"
 
 type IState = {
@@ -13,7 +13,7 @@ type IState = {
 
 const Settings: React.FC = () => {
 
-    const { handleSetDisplayOption } = useContext(TransactionEntryContext)!;
+    const { handleSetDisplayOption } = useContext(AssetEntryContext)!;
 
     const navigation = useNavigation();
 

@@ -1,13 +1,13 @@
-import { TransactionEntry } from "../entities/transaction-entry.entity";
+import { AssetEntry } from "../entities/asset-entry.entity";
 
-export interface ITransactionEntry {
+export interface IAssetEntry {
     id?: number;
-    txnDay?: number;
-    txnMonth?: number;
-    txnYear?: number;
+    acquireDay?: number;
+    acquireMonth?: number;
+    acquireYear?: number;
     description: string;
-    amount: number;
-    expense?: boolean;
+    value: number;
+    tangible?: boolean;
     SN?: number;
 }
 
@@ -15,7 +15,7 @@ export interface ITransactionEntry {
  * Below is used for data passed to SectionList display
  */
 export interface EntriesInDateSections {
-    data: ITransactionEntry[],
+    data: IAssetEntry[],
     title: string
 }
 
@@ -39,8 +39,8 @@ export type ISettings = {
 //e.g. for EditEntryScreen would be initialParams={transactionEntryToEdit:TransactionEntry}
 
 export type AppStackParamList = {
-    TransactionEntryHomeScreen: undefined; //no parameters expected to be passed to route when called
+    AssetEntryHomeScreen: undefined; //no parameters expected to be passed to route when called
     AddEntryScreen: undefined;
-    EditEntryScreen: { transactionEntryToEdit: TransactionEntry }; //means that transactionEntryToEdit must be passed
+    EditEntryScreen: { assetEntryToEdit: AssetEntry }; //means that transactionEntryToEdit must be passed
     SettingsScreen: undefined;
 };

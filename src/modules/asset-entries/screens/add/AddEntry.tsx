@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Button, Input, Text, CheckBox } from '@rneui/base';
 import DateTimePicker from '@react-native-community/datetimepicker'; //installation required
-import { TransactionEntryContext } from '../../contexts/Contexts';
+import { AssetEntryContext } from '../../contexts/Contexts';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 
@@ -10,30 +10,30 @@ import moment from 'moment';
  * Type for state variable for the form
  */
 type IState = {
-    txnDay: number | null;
-    txnMonth: number | null;
-    txnYear: number | null;
+    acquireDay: number | null;
+    acquireMonth: number | null;
+    acquireYear: number | null;
     date: Date;
     description: string;
-    amount: number;
-    expense: boolean
+    value: number;
+    tangible: boolean
 }
 
 const AddEntry: React.FC = () => {
 
-    const { createEntry } = useContext(TransactionEntryContext)!;
+    const { createEntry } = useContext(AssetEntryContext)!;
 
     const navigation = useNavigation();
 
     const date = new Date(); // for initializing all the dates.
     const [state, setState] = useState<IState>({
-        txnDay: date.getDate(),
-        txnMonth: date.getMonth(),
-        txnYear: date.getFullYear(),
+        acquireDay: date.getDate(),
+        acquireMonth: date.getMonth(),
+        acquireYear: date.getFullYear(),
         date,
         description: '',
-        amount: 0,
-        expense: true
+        value: 0,
+        tangible: true
     })
 
     const [showDatePicker, setShowDatePicker] = useState(Platform.OS === "ios" ? true : false);
@@ -41,7 +41,7 @@ const AddEntry: React.FC = () => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text h3 style={styles.inputContainerStyle}>Make new transaction entry</Text>
+                <Text h3 style={styles.inputContainerStyle}>Make new asset entry</Text>
                 {/* Only show button below if the OS is not ios. IOS DateTimePicker is visible by default */}
                 <View style={[styles.inputContainerStyle, { flexDirection: 'row', alignSelf: 'flex-start' }]}>
                     {Platform.OS !== "ios" && <Button
@@ -62,24 +62,24 @@ const AddEntry: React.FC = () => {
                             setState({
                                 ...state,
                                 date: selectedDate,
-                                txnDay: date.getDate(),
-                                txnMonth: date.getMonth(),
-                                txnYear: date.getFullYear()
+                                acquireDay: date.getDate(),
+                                acquireMonth: date.getMonth(),
+                                acquireYear: date.getFullYear()
                             })
                             setShowDatePicker(Platform.OS === "ios" ? true : false);
                         }}
                     />}
                 </View>
                 <CheckBox
-                    title='Income?'
+                    title='Tangible?'
                     containerStyle={[styles.inputContainerStyle, { marginTop: 10 }]}
-                    checked={!state.expense}
-                    onPress={() => { setState({ ...state, expense: !state.expense }) }}
+                    checked={!state.tangible}
+                    onPress={() => { setState({ ...state, tangible: !state.tangible }) }}
                     style={styles.inputStyle}
                 />
                 <Input
                     label="Description"
-                    placeholder="Enter brief transaction description here"
+                    placeholder="Enter brief asset description here"
                     multiline
                     inputContainerStyle={styles.inputContainerStyle}
                     leftIcon={{ type: 'font-awesome', name: 'comment' }}
@@ -87,12 +87,12 @@ const AddEntry: React.FC = () => {
                     style={styles.inputStyle}
                 />
                 <Input
-                    label="Amount"
-                    placeholder="Enter amount here"
+                    label="Value"
+                    placeholder="Enter value here"
                     keyboardType="numeric"
                     inputContainerStyle={styles.inputContainerStyle}
                     leftIcon={{ type: 'font-awesome', name: 'money' }}
-                    onChangeText={amount => setState({ ...state, amount: +amount })}
+                    onChangeText={value => setState({ ...state, value: +value })}
                     style={styles.inputStyle}
                 />
 

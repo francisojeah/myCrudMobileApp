@@ -1,11 +1,11 @@
 import { createContext } from "react";
 import { DataSource } from "typeorm/browser";
-import { TransactionEntry } from "../entities/transaction-entry.entity";
+import { AssetEntry } from "../entities/asset-entry.entity";
 import { DisplayOptions } from "../types/definitions";
 
-export type TransactionEntryContextType = {
+export type AssetEntryContextType = {
     dataSource: DataSource,
-    transactionEntries: TransactionEntry[],
+    assetEntries: AssetEntry[],
     settings: DisplayOptions,
     createEntry: Function,
     updateEntry: Function,
@@ -14,4 +14,4 @@ export type TransactionEntryContextType = {
 }
 
 //create context to use to pass values down, instead of props
-export const TransactionEntryContext = createContext<TransactionEntryContextType | null>(null);
+export const AssetEntryContext = createContext<AssetEntryContextType | null>(null);

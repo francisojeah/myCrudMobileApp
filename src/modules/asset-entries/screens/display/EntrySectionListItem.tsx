@@ -2,30 +2,30 @@ import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ButtonGroup, Text, Button, Icon } from '@rneui/base';
 import { showDeleteConfirmation } from '../../../../global/tools/show-alert';
-import { ITransactionEntry } from '../../types/definitions';
-import { TransactionEntryContext } from '../../contexts/Contexts';
+import { IAssetEntry } from '../../types/definitions';
+import { AssetEntryContext } from '../../contexts/Contexts';
 import { useNavigation } from '@react-navigation/native';
 
 
 type Props = {
-    item: ITransactionEntry;
+    item: IAssetEntry;
 }
 
 const EntrySectionListItem: React.FC<Props> = ({ item }) => {
 
-    const transactionEntryContext = useContext(TransactionEntryContext);
+    const assetEntryContext = useContext(AssetEntryContext);
     
     const navigation = useNavigation();
     
-    const { deleteEntry } = transactionEntryContext!
+    const { deleteEntry } = assetEntryContext!
     
     return (
         <View style={styles.inputContainerStyle}>
-            <Text style={{ fontSize: 18 }}>Income?: {item.expense ? "No" : "Yes"}</Text>
+            <Text style={{ fontSize: 18 }}>Tangible?: {item.tangible ? "No" : "Yes"}</Text>
             <Text style={{ fontSize: 18 }}>Description: {item.description}</Text>
-            <Text style={{ fontSize: 18 }}>Amount: {item.amount}</Text>
+            <Text style={{ fontSize: 18 }}>Value: {item.value}</Text>
             <ButtonGroup
-                containerStyle={{ backgroundColor: 'skyblue', width: '40%', borderColor: 'skyblue' }}
+                containerStyle={{ backgroundColor: 'transparent', width: '40%', borderColor: 'transparent' }}
                 buttons={
                     [<Button
                         icon={<Icon
@@ -35,7 +35,7 @@ const EntrySectionListItem: React.FC<Props> = ({ item }) => {
                         type="clear"
                         title="Edit"
                         titleStyle={{ fontSize: 15 }}
-                        onPress={() => navigation.navigate("EditEntryScreen" as never,{transactionEntryToEdit: item} as never)}
+                        onPress={() => navigation.navigate("EditEntryScreen" as never,{assetEntryToEdit: item} as never)}
                     />,
                     <Button
                         icon={<Icon

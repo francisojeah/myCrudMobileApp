@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DataSource } from 'typeorm/browser';
-import { TransactionEntry } from './entities/transaction-entry.entity';
-import { createTransactionEntry, deleteTransactionEntry, getTransactionEntries, updateTransactionEntry } from './services/transaction-entry.service';
+import { AssetEntry } from './entities/asset-entry.entity';
+import { createAssetEntry, deleteAssetEntry, getAssetEntries, updateAssetEntry } from './services/asset-entry.service';
 import { AppStackParamList, DisplayOptions } from './types/definitions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddEntry from './screens/add/AddEntry';
@@ -18,8 +18,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 See in App component below how it is used
  */
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import TransactionEntryHomeScreen from './screens/display/TransactionEntryHomeScreen';
-import { TransactionEntryContext } from './contexts/Contexts';
+import AssetEntryHomeScreen from './screens/display/AssetEntryHomeScreen';
+import { AssetEntryContext } from './contexts/Contexts';
 import { Button, Icon } from '@rneui/base';
 import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu';
 import EditEntry from './screens/edit/EditEntry';
@@ -63,7 +63,7 @@ const AppStack = () => {
                         onPress={() => setMenuVisible(true)}
                     />}
                     onRequestClose={() => setMenuVisible(false)}
-                    style={{ backgroundColor: 'lightblue' }}
+                    style={{ backgroundColor: 'lightgreen' }}
                 >
                     <MenuItem
                         onPress={() => {
@@ -109,14 +109,14 @@ const AppStack = () => {
 
     return (
         <Stack.Navigator //this red will disappear in later versions of @react/types. Do not worry about it.
-            initialRouteName='TransactionEntryHomeScreen'
+            initialRouteName='AssetEntryHomeScreen'
 
             screenOptions={{
                 headerMode: 'screen',
                 presentation: 'card',
                 keyboardHandlingEnabled: true,
                 headerStyle: {
-                    backgroundColor: 'lightblue',
+                    backgroundColor: 'lightgreen',
                     height: 90
                 },
                 headerTitleStyle: {
@@ -124,13 +124,13 @@ const AppStack = () => {
                     fontSize: 18,
                     //fontFamily: 'space-mono'
                 },
-                title: "Personal Transactions",
+                title: "Personal Assets",
                 //Below can be overriden at the level of stack.screen
                 headerRight: () => (
                     <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity
                             style={styles.logo}
-                            onPress={() => navigation.navigate('TransactionEntryHomeScreen' as never)}>
+                            onPress={() => navigation.navigate('AssetEntryHomeScreen' as never)}>
                             <Image style={styles.logo}
                                 source={require('../../../assets/pau-logo-blue-transparent-background.png')}
                             />
@@ -141,7 +141,7 @@ const AppStack = () => {
                 headerTitleAlign: 'center'
                 //There are other possibilities. See https://reactnavigation.org/docs/stack-navigator
             }} >
-            <Stack.Screen name="TransactionEntryHomeScreen" component={TransactionEntryHomeScreen}
+            <Stack.Screen name="AssetEntryHomeScreen" component={AssetEntryHomeScreen}
                 options={{ //override here, the general value in screenOptions above.
                     headerTitleAlign: 'left', 
                     headerTitleStyle: {
@@ -184,33 +184,33 @@ const AppStack = () => {
     )
 }
 
-//Parent App is expected to pass the dataSource to this Landing for TransactionEntry module
+//Parent App is expected to pass the dataSource to this Landing for AssetEntry module
 type Props = {
     dataSource: DataSource;
 }
 
-const TransactionEntryLanding: React.FC<Props> = ({ dataSource }) => {
+const AssetEntryLanding: React.FC<Props> = ({ dataSource }) => {
 
     //As usual, we need to state manage
-    const [transactionEntries, setTransactionEntries] = useState<TransactionEntry[]>([]);
+    const [assetEntries, setAssetEntries] = useState<AssetEntry[]>([]);
 
     //for settings. Better to use objects in state for multiple settings. Change this later to {} when there are more settings.
     const [settings, setSettings] = useState<DisplayOptions>(DisplayOptions.SECTION_LIST_BY_DATE)
 
     /**
    * Function to create a new entry
-   * @param transactionEntryData 
+   * @param assetEntryData 
    */
-    const createEntry = (transactionEntryData: TransactionEntry, navigation: { navigate: Function }) => {
-        createTransactionEntry(dataSource, transactionEntryData, transactionEntries, setTransactionEntries, navigation);
+    const createEntry = (assetEntryData: AssetEntry, navigation: { navigate: Function }) => {
+        createAssetEntry(dataSource, assetEntryData, assetEntries, setAssetEntries, navigation);
     }
 
     /**
    * Function to edit an  entry
-   * @param editedTransactionEntryData
+   * @param editedAssetEntryData
    */
-    const updateEntry = (editedTransactionEntryData: TransactionEntry, navigation: { navigate: Function }) => {
-        updateTransactionEntry(dataSource, editedTransactionEntryData, transactionEntries, setTransactionEntries, navigation);
+    const updateEntry = (editedAssetEntryData: AssetEntry, navigation: { navigate: Function }) => {
+        updateAssetEntry(dataSource, editedAssetEntryData, assetEntries, setAssetEntries, navigation);
     }
 
     /**
@@ -218,7 +218,7 @@ const TransactionEntryLanding: React.FC<Props> = ({ dataSource }) => {
      * @param id 
      */
     const deleteEntry = (id: number) => {
-        deleteTransactionEntry(dataSource, id, transactionEntries, setTransactionEntries);
+        deleteAssetEntry(dataSource, id, assetEntries, setAssetEntries);
     }
 
     const handleSetDisplayOption = (displayOption: DisplayOptions) => {
@@ -244,16 +244,16 @@ const TransactionEntryLanding: React.FC<Props> = ({ dataSource }) => {
     const setDisplayOption = useCallback(() => getDisplayOption(), []);
 
     useEffect(() => {
-        getTransactionEntries(dataSource, setTransactionEntries);
+        getAssetEntries(dataSource, setAssetEntries);
         setDisplayOption();
     }, [])//run once
 
 
     return (
         <NavigationContainer independent={true}>
-            <TransactionEntryContext.Provider value={{
+            <AssetEntryContext.Provider value={{
                 dataSource,
-                transactionEntries,
+                assetEntries,
                 settings,
                 createEntry,
                 updateEntry,
@@ -262,7 +262,7 @@ const TransactionEntryLanding: React.FC<Props> = ({ dataSource }) => {
             }
             }>
                 <AppStack />
-            </TransactionEntryContext.Provider>
+            </AssetEntryContext.Provider>
         </NavigationContainer >
 
     );
@@ -277,4 +277,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default TransactionEntryLanding;
+export default AssetEntryLanding;
