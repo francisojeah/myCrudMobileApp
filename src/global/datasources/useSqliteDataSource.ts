@@ -8,7 +8,7 @@ import { Post } from '../../modules/examples/entities/post.entity';
 import { TransactionEntry } from '../../modules/transaction-entries/entities/transaction-entry.entity';
 
 const dataSource = new DataSource({
-    database: "personal_manager_app.db",
+    database: "personal_multi_manager.db",
     driver: require('expo-sqlite'),
     entities: [
         //"src/**/*.entity{.ts,.js}", //Not working. I need to investigate this further.
