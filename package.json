@@ -10,9 +10,9 @@
     "eject": "expo eject",
     "postinstall": "patch-package",
     "migration:create": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:create",
-    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d src/global/datasources/data-source.ts",
-    "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d src/global/datasources/data-source.ts",
-    "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d src/global/datasources/data-source.ts"
+    "migration:generate": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:generate -d src/global/datasources/data-source-only-for-generating-migrations-using-postgres.ts",
+    "migration:up": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:run -d src/global/datasources/data-source-only-for-generating-migrations-using-postgres.ts",
+    "migration:down": "node --loader ts-node/esm ./node_modules/.bin/typeorm migration:revert -d src/global/datasources/data-source-only-for-generating-migrations-using-postgres.ts"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",

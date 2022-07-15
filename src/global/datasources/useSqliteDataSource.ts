@@ -1,18 +1,21 @@
 import { useCallback, useState } from 'react';
 import { DataSource } from 'typeorm/browser';
+import { name1655204334428 } from '../../migrations/1655204334428-name';
+import { AssetEntry } from '../../modules/asset-entries/entities/asset-entry.entity';
 import { Author } from '../../modules/examples/entities/author.entity';
 import { Category } from '../../modules/examples/entities/category.entity';
 import { Post } from '../../modules/examples/entities/post.entity';
 import { TransactionEntry } from '../../modules/transaction-entries/entities/transaction-entry.entity';
 
 const dataSource = new DataSource({
-    database: "personal_transaction_manager.db",
+    database: "personal_manager_app.db",
     driver: require('expo-sqlite'),
     entities: [
         //"src/**/*.entity{.ts,.js}", //Not working. I need to investigate this further.
-        Post,
-        Category,
-        Author,
+        //Post,
+        //Category,
+        //Author,
+        AssetEntry,
         TransactionEntry
     ],
     synchronize: true, //set to false in production and migrationRun to true

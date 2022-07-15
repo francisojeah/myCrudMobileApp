@@ -5,8 +5,8 @@ import TransactionEntryLanding from './src/modules/transaction-entries/Transacti
 import { Icon, Text } from '@rneui/base';
 import useCachedResources from './src/global/hooks/useCachedResources';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import AssetEntryLanding from './src/modules/asset-entries/AssetEntryLanding';
 
 const App: React.FC = () => {
 
@@ -19,16 +19,14 @@ const App: React.FC = () => {
   //below are some optional props that can be passed to Tab.Navigator. You can try the code with and without options
   const tabProps = {
     initialRouteName: 'TransactionEntryLandingScreen',
-    tabBarOptions: {
+    screenOptions: {
+      lazy: true, //default is true
       activeTintColor: 'green',
       inactiveTintColor: 'grey',
       style: {
         backgroundColor: '#eee',
       },
       backBehavior: 'history'//Behaviour when system back is touched. Options are none, initialRoute, order, history. This seems to be buggy
-    },
-    screenOptions: {
-      lazy: true //default is true
     }
     
   }
@@ -39,7 +37,6 @@ const App: React.FC = () => {
       <Tab.Screen
         name="TransactionEntryLandingScreen"
         children={() => <TransactionEntryLanding dataSource={dataSource!}/>}
-        //component={TransactionEntryLanding}
         options={{
           title: 'Transaction Manager',
           tabBarActiveBackgroundColor: 'transparent',
@@ -57,12 +54,7 @@ const App: React.FC = () => {
       />
       <Tab.Screen
         name="AssetEntryLandingScreen"
-        children={() =>
-        (
-          <View style={{flex: 1, justifyContent:'center', alignItems:'center', backgroundColor: 'lightgreen'}}>
-            <Text>You can replace this with Asset Entry landing page</Text>
-          </View>
-        )}
+        children={() => <AssetEntryLanding dataSource={dataSource!}/>}
         options={{
           title: "Asset Manager",
           headerShown: false,
@@ -87,8 +79,6 @@ const App: React.FC = () => {
       return (
 
         <NavigationContainer>
-          {/*<TransactionEntryLanding dataSource={dataSource} />*/}
-          {/*<ExamplesHome dataSource={dataSource} />*/}
           <TabNavigator />
         </NavigationContainer>
       )

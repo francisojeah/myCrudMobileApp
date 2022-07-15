@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Badge, Icon, Text } from '@rneui/base';
-import { ITransactionEntry } from '../../types/definitions';
+import { IAssetEntry } from '../../types/definitions';
 import { Table, Row, Cell } from 'react-native-table-component';
 import {printToFileAsync, } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -9,10 +9,10 @@ import { deleteAsync } from 'expo-file-system';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
 import { showDeleteConfirmation } from '../../../../global/tools/show-alert';
-import { TransactionEntryContext } from '../../contexts/Contexts';
+import { AssetEntryContext } from '../../contexts/Contexts';
 
 type Props = {
-    entries: ITransactionEntry[] //array of entries
+    entries: IAssetEntry[] //array of entries
 }
 
 const Spreadsheet: React.FC<Props> = ({ entries }) => {
@@ -21,9 +21,9 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
 
     const [table, setTable] = useState<{ headers: string[], rows: any[], widthArr: number[] } | null>(null);
 
-    const transactionEntryContext = useContext(TransactionEntryContext);
+    const assetEntryContext = useContext(AssetEntryContext);
 
-    const { deleteEntry } = transactionEntryContext!
+    const { deleteEntry } = assetEntryContext!
 
     const makeTable = () => {
 
@@ -31,7 +31,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
         const entriesToShare = entries.map((entry, key) => {
             //const { id, ...restOfEntry } = entry;
             //putting serial number first
-            const entryWithSerialNumber = { SN: key + 1 } as unknown as ITransactionEntry
+            const entryWithSerialNumber = { SN: key + 1 } as unknown as IAssetEntry
             Object.assign(entryWithSerialNumber, entry)
             return entryWithSerialNumber;
         })
@@ -43,12 +43,12 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
             rows: entriesToShare.map((entry) => {
                 return Object.values(entry)
             }),*/
-            headers: entriesToShare.length > 0? ["", "S/N", "Date", "Description", "Amount", "Expense?"] : [],//first empty space is for id in row which is not shown but kept for reference
+            headers: entriesToShare.length > 0? ["", "S/N", "Acq. Date", "Description", "Value", "Tangible?"]: [],//first empty space is for id in row which is not shown but kept for reference
             rows: entriesToShare.map((entry) => {
-                return [entry.id, entry.SN, moment([entry.txnYear!, entry.txnMonth!, entry.txnDay!]).format("LL"), entry.description, new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(entry.amount), entry.expense ? 'Yes' : 'No']
+                return [entry.id, entry.SN, moment([entry.acquireYear!, entry.acquireMonth!, entry.acquireDay!]).format("LL"), entry.description, new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(entry.value), entry.tangible ? 'Yes' : 'No']
             }),
 
-            widthArr: [0, 40, 70, 120, 100, 80]//first space is for the sake of id which is not shown
+            widthArr: [0, 50, 70, 120, 100, 80]//first space is for the sake of id which is not shown
         };
         setTable(table);
 
@@ -71,7 +71,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
                                 table.rows.map((rowData, index) => {
                                     return (
                                         
-                                            <TouchableOpacity key={index} style={styles.row}  onPress={() => navigation.navigate("EditEntryScreen" as never, { transactionEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
+                                            <TouchableOpacity key={index} style={styles.row}  onPress={() => navigation.navigate("EditEntryScreen" as never, { assetEntryToEdit: entries.find((entry, index) => entry.id === rowData[0]) } as never)}>
                                                 <TouchableOpacity onPress={
                                                     () => {
                                                         //deleteEntry(item.id!)
@@ -117,7 +117,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
             `<html>
             <body>
                 <table>
-                    <caption>Personal Transactions</caption>
+                    <caption>Personal Assets</caption>
                     <thead>
                         <tr>
                             ${table!.headers.map((header) => `<th>${header}</th>`)}
@@ -146,7 +146,7 @@ const Spreadsheet: React.FC<Props> = ({ entries }) => {
 
     return (
         <View style={styles.container}>
-            <View style={[styles.inputContainerStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: "lightblue" }]}>
+            <View style={[styles.inputContainerStyle, { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: "lightgreen" }]}>
                 <Text h3>Entries found... <Badge status="primary" value={entries.length} /></Text>
                 <TouchableOpacity
                     style={{ height: 20, top: -9 }}
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     title: { fontSize: 16, color: 'black' },
     container: { flex: 1, paddingTop: 1 },
     head: { height: 40, backgroundColor: '#f1f8ff', width: '100%' },
-    row: { flexDirection: 'row', backgroundColor: 'skyblue', borderWidth: 1, borderColor: 'lightblue' },
+    row: { flexDirection: 'row', backgroundColor: 'lightgreen', borderWidth: 1, borderColor: 'lightgreen' },
     text: { padding: 6 },
     wrapper: { flexDirection: 'row' },
     inputContainerStyle: {

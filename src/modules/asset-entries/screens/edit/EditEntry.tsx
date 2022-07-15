@@ -2,38 +2,46 @@ import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Button, Input, Text, CheckBox } from '@rneui/base';
 import DateTimePicker from '@react-native-community/datetimepicker'; //installation required
-import { TransactionEntryContext } from '../../contexts/Contexts';
-import { useNavigation } from '@react-navigation/native';
+import { AssetEntryContext } from '../../contexts/Contexts';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { AssetEntry } from '../../entities/asset-entry.entity';
 import moment from 'moment';
 
 /**
  * Type for state variable for the form
  */
 type IState = {
-    txnDay: number | null;
-    txnMonth: number | null;
-    txnYear: number | null;
+    id: number,
+    acquireDay: number | null;
+    acquireMonth: number | null;
+    acquireYear: number | null;
     date: Date;
     description: string;
-    amount: number;
-    expense: boolean
+    value: number;
+    tangible: boolean
 }
 
-const AddEntry: React.FC = () => {
+const EditEntry: React.FC = () => {
 
-    const { createEntry } = useContext(TransactionEntryContext)!;
+    const { updateEntry } = useContext(AssetEntryContext)!;
+
+    //const route = useRoute();
+    //below is the right declaration for TypeScript but looks complicated.
+    const route = useRoute<RouteProp<Record<string, { assetEntryToEdit: AssetEntry }>>>();
+    const assetEntryToEdit = route.params.assetEntryToEdit;
 
     const navigation = useNavigation();
 
     const date = new Date(); // for initializing all the dates.
     const [state, setState] = useState<IState>({
-        txnDay: date.getDate(),
-        txnMonth: date.getMonth(),
-        txnYear: date.getFullYear(),
-        date,
-        description: '',
-        amount: 0,
-        expense: true
+        id: assetEntryToEdit.id,
+        acquireDay: assetEntryToEdit.acquireDay,
+        acquireMonth: assetEntryToEdit.acquireMonth,
+        acquireYear: assetEntryToEdit.acquireYear,
+        date: new Date(assetEntryToEdit.acquireYear, assetEntryToEdit.acquireMonth, assetEntryToEdit.acquireDay),
+        description: assetEntryToEdit.description,
+        value: assetEntryToEdit.value,
+        tangible: assetEntryToEdit.tangible ? true : false
     })
 
     const [showDatePicker, setShowDatePicker] = useState(Platform.OS === "ios" ? true : false);
@@ -41,7 +49,7 @@ const AddEntry: React.FC = () => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text h3 style={styles.inputContainerStyle}>Make new transaction entry</Text>
+                <Text h3 style={styles.inputContainerStyle}>Edit displayed asset</Text>
                 {/* Only show button below if the OS is not ios. IOS DateTimePicker is visible by default */}
                 <View style={[styles.inputContainerStyle, { flexDirection: 'row', alignSelf: 'flex-start' }]}>
                     {Platform.OS !== "ios" && <Button
@@ -62,24 +70,24 @@ const AddEntry: React.FC = () => {
                             setState({
                                 ...state,
                                 date: selectedDate,
-                                txnDay: date.getDate(),
-                                txnMonth: date.getMonth(),
-                                txnYear: date.getFullYear()
+                                acquireDay: date.getDate(),
+                                acquireMonth: date.getMonth(),
+                                acquireYear: date.getFullYear()
                             })
                             setShowDatePicker(Platform.OS === "ios" ? true : false);
                         }}
                     />}
                 </View>
                 <CheckBox
-                    title='Income?'
-                    containerStyle={[styles.inputContainerStyle, { marginTop: 10 }]}
-                    checked={!state.expense}
-                    onPress={() => { setState({ ...state, expense: !state.expense }) }}
-                    style={styles.inputStyle}
+                    title='Tangible?'
+                    containerStyle={[styles.inputContainerStyle, { marginTop: 10, borderColor: '#fffff2' }]}
+                    checked={!state.tangible}
+                    onPress={() => { setState({ ...state, tangible: !state.tangible }) }}
                 />
                 <Input
                     label="Description"
-                    placeholder="Enter brief transaction description here"
+                    value={state.description}
+                    placeholder="Enter brief asset description here"
                     multiline
                     inputContainerStyle={styles.inputContainerStyle}
                     leftIcon={{ type: 'font-awesome', name: 'comment' }}
@@ -87,21 +95,24 @@ const AddEntry: React.FC = () => {
                     style={styles.inputStyle}
                 />
                 <Input
-                    label="Amount"
-                    placeholder="Enter amount here"
+                    label="Value"
+                    value={state.value.toString()}
+                    placeholder="Enter value here"
                     keyboardType="numeric"
                     inputContainerStyle={styles.inputContainerStyle}
                     leftIcon={{ type: 'font-awesome', name: 'money' }}
-                    onChangeText={amount => setState({ ...state, amount: +amount })}
+                    onChangeText={value => setState({ ...state, value: +value })}
                     style={styles.inputStyle}
                 />
 
                 <View style={{ flexDirection: 'row' }}>
                     <Button style={[styles.inputContainerStyle, { paddingRight: 1 }]}
-                        title="Submit"
+                        title="Save"
                         onPress={() => {
                             //call create which will also make the form disappear
-                            createEntry(state, navigation);
+                            //remove date before sending because it is not in the AssetEntry table. Only the breakdown day, month, year are there
+                            const { date, ...updatedAssetEntryData } = state;
+                            updateEntry(updatedAssetEntryData, navigation);
                         }}
                     /><Button style={[styles.inputContainerStyle, { paddingLeft: 1 }]}
                         title="Cancel"
@@ -137,4 +148,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddEntry;
+export default EditEntry;
