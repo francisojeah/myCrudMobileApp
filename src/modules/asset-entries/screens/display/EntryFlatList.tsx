@@ -3,14 +3,14 @@ import { View, FlatList, StyleSheet, TouchableOpacity, Share } from 'react-nativ
 import { Badge, Icon, Text } from '@rneui/base';
 
 import EntryFlatListItem from './EntryFlatListItem';
-import { ITransactionEntry } from '../../types/definitions';
+import { IAssetEntry } from '../../types/definitions';
 
 import { parse } from 'json2csv';
 
 
 
 type Props = {
-    entries: ITransactionEntry[] | [] //array of entries
+    entries: IAssetEntry[] | [] //array of entries
 }
 
 const EntryFlatList: React.FC<Props> = ({ entries }) => {
@@ -24,7 +24,7 @@ const EntryFlatList: React.FC<Props> = ({ entries }) => {
             const entriesToShare = entries.map((entry, key) => {
                 const { id, ...restOfEntry } = entry;
                 //putting serial number first
-                const entryWithSerialNumber: ITransactionEntry = { SN: key + 1 } as never
+                const entryWithSerialNumber: IAssetEntry = { SN: key + 1 } as never
                 Object.assign(entryWithSerialNumber, restOfEntry)
                 return entryWithSerialNumber;
             })
@@ -49,7 +49,7 @@ const EntryFlatList: React.FC<Props> = ({ entries }) => {
 
     return (
         <FlatList
-            style={{ width: '100%', padding: 3, backgroundColor: 'skyblue' }}
+            style={{ width: '100%', padding: 3, backgroundColor: 'lightgreen' }}
             data={entries}
             renderItem={({ item }) => (
                 <EntryFlatListItem item={item} />
@@ -92,7 +92,7 @@ export default EntryFlatList;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'lightblue',
+        backgroundColor: 'lightgreen',
         alignItems: 'center',
         justifyContent: 'center',
     },

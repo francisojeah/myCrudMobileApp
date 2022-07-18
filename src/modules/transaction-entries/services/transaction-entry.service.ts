@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm/browser";
 import { TransactionEntry } from "../entities/transaction-entry.entity";
 import { EntriesInDateSections, ITransactionEntry } from "../types/definitions";
 
@@ -24,8 +24,7 @@ export const createTransactionEntry = async (dataSource: DataSource, transaction
         //time to modify state after create
         const transactionEntries = transactionEntriesInState;
         transactionEntries.push(transactionEntry);
-        setTransactionEntries(transactionEntries);
-        //setOnAddEntry(false);
+        setTransactionEntries([...transactionEntries]);
         navigation.navigate('TransactionEntryHomeScreen',{})//adding the second argument forces the destination to update immediately
     } catch (error) {
         console.log(error);

@@ -2,47 +2,47 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { DisplayOptions } from '../../types/definitions';
-import { transformEntriesToDateSections } from '../../services/transaction-entry.service';
+import { transformEntriesToDateSections } from '../../services/asset-entry.service';
 import EntryFlatList from './EntryFlatList';
 import Spreadsheet from './Spreadsheet';
-import { TransactionEntryContext } from '../../contexts/Contexts';
+import { AssetEntryContext } from '../../contexts/Contexts';
 import EntrySectionList from './EntrySectionList';
-import { TransactionEntry } from '../../entities/transaction-entry.entity';
+import { AssetEntry } from '../../entities/asset-entry.entity';
 
 import { Icon, SearchBar } from "@rneui/themed";
 import { Text } from '@rneui/base';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 
-const TransactionEntryHomeScreen: React.FC = () => {
+const AssetEntryHomeScreen: React.FC = () => {
 
-    const transactionEntryContext = useContext(TransactionEntryContext);
+    const assetEntryContext = useContext(AssetEntryContext);
     const navigation = useNavigation();
     const {
-        transactionEntries,
+        assetEntries,
         settings
-    } = transactionEntryContext!
+    } = assetEntryContext!
 
     //TODO List search implementation following https://snack.expo.dev/@aboutreact/example-of-search-bar-in-react-native
-    //Prepare the filtered entry to be displayed. Initialize with transactionEntries in context.
+    //Prepare the filtered entry to be displayed. Initialize with assetEntries in context.
     //SearchFilter will do the rest
-    const [filteredTransactionEntries, setFilteredTransactionEntries] = useState<TransactionEntry[]>([]);
+    const [filteredAssetEntries, setFilteredAssetEntries] = useState<AssetEntry[]>([]);
     const [search, setSearch] = useState('');
 
     useEffect(() => {
-        setFilteredTransactionEntries(transactionEntries)
-    }, [transactionEntries])
+        setFilteredAssetEntries(assetEntries)
+    }, [assetEntries])
 
     const searchFilterFunction = useCallback((text: string) => {
 
         // Check if searched text is not blank
         if (text) {
             // Inserted text is not blank
-            // Filter the transactionEntries and Update filteredTransactionEntries
-            const newData = transactionEntries.filter((item) => {
+            // Filter the assetEntries and Update filteredAssetEntries
+            const newData = assetEntries.filter((item) => {
                 //Check fields for occurrence
                 //I am using formatted Date in combined fields below so as to allow for search of month in word
-                const combinedFields = `${item.description} ${item.amount} ${item.txnMonth + 1} ${moment([item.txnYear, item.txnMonth, item.txnDay]).format("LL")}`;
+                const combinedFields = `${item.description} ${item.value} ${item.acquireMonth + 1} ${moment([item.acquireYear, item.acquireMonth, item.acquireDay]).format("LL")}`;
                 const itemData = combinedFields
                     ? combinedFields.toUpperCase()
                     : ''.toUpperCase();
@@ -50,15 +50,15 @@ const TransactionEntryHomeScreen: React.FC = () => {
 
                 return itemData.indexOf(textData) > -1; //returns true if search text is found in the description
             });
-            setFilteredTransactionEntries(newData);
+            setFilteredAssetEntries(newData);
             setSearch(text);
         } else {
             // Inserted text is blank
-            // Update filteredTransactionEntries with transactionEntries
-            setFilteredTransactionEntries(transactionEntries);
+            // Update filteredAssetEntries with assetEntries
+            setFilteredAssetEntries(assetEntries);
             setSearch(text);
         }
-    }, [transactionEntries]);
+    }, [assetEntries]);
     /**
    * Use memoized called to transform entries to date sections. 
    * As it is a complex operation, it is good to memoize it and
@@ -66,8 +66,8 @@ const TransactionEntryHomeScreen: React.FC = () => {
    * will rerun
    */
     const getEntriesInDateSections = useMemo(() => {
-        return transformEntriesToDateSections(filteredTransactionEntries)
-    }, [filteredTransactionEntries]);//only run anew if entries in state change
+        return transformEntriesToDateSections(filteredAssetEntries)
+    }, [filteredAssetEntries]);//only run anew if entries in state change
 
     /**
        * Check choice of display and prepare entries for display
@@ -75,8 +75,8 @@ const TransactionEntryHomeScreen: React.FC = () => {
 
     const displayEntries = () => {
         switch (settings) {
-            case DisplayOptions.FLAT_LIST: return <EntryFlatList entries={filteredTransactionEntries} />
-            case DisplayOptions.SPREADSHEET: return <Spreadsheet entries={filteredTransactionEntries} />
+            case DisplayOptions.FLAT_LIST: return <EntryFlatList entries={filteredAssetEntries} />
+            case DisplayOptions.SPREADSHEET: return <Spreadsheet entries={filteredAssetEntries} />
             default: return <EntrySectionList entriesInDateSections={getEntriesInDateSections!} />
         }
     }
@@ -89,7 +89,7 @@ const TransactionEntryHomeScreen: React.FC = () => {
                     searchIcon={{ size: 24 }}
                     placeholder="Type here..."
                     value={search}
-                    containerStyle={{ backgroundColor: 'lightblue' }}
+                    containerStyle={{ backgroundColor: 'lightgreen' }}
                     onChangeText={(text) => searchFilterFunction(text)}
                 />
             </View>
@@ -109,7 +109,7 @@ const TransactionEntryHomeScreen: React.FC = () => {
     );
 }
 
-export default TransactionEntryHomeScreen;
+export default AssetEntryHomeScreen;
 
 const styles = StyleSheet.create({
     container: {

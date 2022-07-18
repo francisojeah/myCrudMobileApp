@@ -1,8 +1,8 @@
 import { FontAwesome } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { loadAsync } from 'expo-font';
+import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm/browser';
 import useSqliteDataSource from '../datasources/useSqliteDataSource';
 
 export default function useCachedResources() {
@@ -29,10 +29,10 @@ export default function useCachedResources() {
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
-        SplashScreen.preventAutoHideAsync();
+        preventAutoHideAsync();
 
         // Load fonts. Below is from the official example. Feel free to explore it
-        await Font.loadAsync({
+        await loadAsync({
           ...FontAwesome.font,
           'space-mono': require('../../../assets/fonts/SpaceMono-Regular.ttf'),
         });
@@ -47,7 +47,7 @@ export default function useCachedResources() {
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        SplashScreen.hideAsync();
+        hideAsync();
       }
     }
 
